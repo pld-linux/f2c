@@ -1,0 +1,272 @@
+--- f2c-19991109/libf2c/f2c.h0.tim	Wed Jun 19 07:04:28 1996
++++ f2c-19991109/libf2c/f2c.h0	Wed Jul 28 12:27:07 1999
+@@ -7,6 +7,26 @@
+ #ifndef F2C_INCLUDE
+ #define F2C_INCLUDE
+ 
++#ifdef __alpha__
++
++typedef int integer;
++typedef unsigned int uinteger;
++typedef char *address;
++typedef short int shortint;
++typedef float real;
++typedef double doublereal;
++typedef struct { real r, i; } complex;
++typedef struct { doublereal r, i; } doublecomplex;
++typedef int logical;
++typedef short int shortlogical;
++typedef char logical1;
++typedef char integer1;
++
++
++
++#else
++
++
+ typedef long int integer;
+ typedef unsigned long int uinteger;
+ typedef char *address;
+@@ -26,6 +46,8 @@
+ #define qbit_set(a,b)	((a) |  ((ulongint)1 << (b)))
+ #endif
+ 
++#endif /* __alpha__ */
++
+ #define TRUE_ (1)
+ #define FALSE_ (0)
+ 
+@@ -42,9 +64,21 @@
+ typedef short ftnlen;
+ typedef short ftnint;
+ #else
++
++#ifdef __alpha__
++
++typedef int flag;
++typedef int ftnlen;
++typedef int ftnint;
++
++#else
++
+ typedef long int flag;
+ typedef long int ftnlen;
+ typedef long int ftnint;
++
++#endif /* __alpha__ */
++
+ #endif
+ 
+ /*external read, write*/
+--- f2c-19991109/libf2c/makefile.u.tim	Mon May 17 15:40:48 1999
++++ f2c-19991109/libf2c/makefile.u	Wed Jul 28 12:30:27 1999
+@@ -13,15 +13,17 @@
+ # to the CFLAGS = line below.
+ 
+ .SUFFIXES: .c .o
+-CC = cc
++CC = gcc
+ SHELL = /bin/sh
+-CFLAGS = -O
++CFLAGS = $(RPM_OPT_FLAGS) -DNON_UNIX_STDIO
++SHARED = libf2c.so.0.22
+ 
+ # compile, then strip unnecessary symbols
+ .c.o:
+ 	$(CC) -c -DSkip_f2c_Undefs $(CFLAGS) $*.c
+-	ld -r -x -o $*.xxx $*.o
+-	mv $*.xxx $*.o
++%.o : %.c \
++	$(CC) -c $(CFLAGS) $(CPPFLAGS) -f -o $@ $<
++
+ ## Under Solaris (and other systems that do not understand ld -x),
+ ## omit -x in the ld line above.
+ ## If your system does not have the ld command, comment out
+@@ -69,11 +71,21 @@
+ OFILES = $(MISC) $(POW) $(CX) $(DCX) $(REAL) $(DBL) $(INT) \
+ 	$(HALF) $(CMP) $(EFL) $(CHAR) $(I77) $(TIME)
+ 
+-all: f2c.h signal1.h sysdep1.h libf2c.a
++all: f2c.h signal1.h sysdep1.h libf2c.a $(SHARED)
+ 
+ libf2c.a: $(OFILES)
+-	ar r libf2c.a $?
+-	-ranlib libf2c.a
++	ar r $@ $? 
++	-ranlib $@
++
++
++SHAREDOBJ = $(patsubst %.o,%.o,$(MISC) $(POW) $(CX) $(DCX) \
++	$(REAL) $(DBL) $(INT) $(HALF) $(CMP) $(EFL) $(CHAR) $(I77) $(TIME))
++
++$(SHARED): $(SHAREDOBJ)
++	$(CC) -shared -Wl,-soname,libf2c.so.0 -o $@ *.o -lm -lc
++
++
++
+ 
+ ## Shared-library variant: the following rule works on Linux
+ ## systems.  Details are system-dependent.  Under Linux, -fPIC
+@@ -122,8 +134,8 @@
+ 	-ranlib $(LIBDIR)/libf2c.a
+ 
+ clean:
+-	rm -f libf2c.a *.o arith.h signal1.h sysdep1.h
+-
++	rm -f libf2c.a *.o $(SHARED) arith.h signal1.h sysdep1.h
++	
+ backspac.o:	fio.h
+ close.o:	fio.h
+ dfe.o:		fio.h
+--- f2c-19991109/src/f2c.1t.tim	Tue Sep  8 10:16:48 1998
++++ f2c-19991109/src/f2c.1t	Wed Jul 28 12:27:07 1999
+@@ -353,11 +353,8 @@
+ .F /usr/include/f2c.h
+ header file
+ .TP
+-.F /usr/lib/libF77.a
+-intrinsic function library
+-.TP
+-.F /usr/lib/libI77.a
+-Fortran I/O library
++.F /usr/lib/libf2c.a
++f2c function library
+ .TP
+ .F /lib/libc.a
+ C library, see section 3
+--- f2c-19991109/src/f2c.h.tim	Wed Jun 19 07:04:27 1996
++++ f2c-19991109/src/f2c.h	Wed Jul 28 12:27:07 1999
+@@ -7,6 +7,28 @@
+ #ifndef F2C_INCLUDE
+ #define F2C_INCLUDE
+ 
++#ifdef __alpha__
++
++typedef int integer;
++typedef unsigned int uinteger;
++typedef char *address;
++typedef short int shortint;
++typedef float real;
++typedef double doublereal;
++typedef struct { real r, i; } complex;
++typedef struct { doublereal r, i; } doublecomplex;
++typedef int logical;
++typedef short int shortlogical;
++typedef char logical1;
++typedef char integer1;
++
++
++
++#else
++
++
++
++
+ typedef long int integer;
+ typedef unsigned long int uinteger;
+ typedef char *address;
+@@ -26,6 +48,8 @@
+ #define qbit_set(a,b)	((a) |  ((ulongint)1 << (b)))
+ #endif
+ 
++#endif /* __alpha__ */
++
+ #define TRUE_ (1)
+ #define FALSE_ (0)
+ 
+@@ -41,10 +65,23 @@
+ typedef short flag;
+ typedef short ftnlen;
+ typedef short ftnint;
++
+ #else
++
++#ifdef __alpha__
++
++typedef int flag;
++typedef int ftnlen;
++typedef int ftnint;
++
++#else
++
+ typedef long int flag;
+ typedef long int ftnlen;
+ typedef long int ftnint;
++
++#endif /* __alpha__ */
++
+ #endif
+ 
+ /*external read, write*/
+--- f2c-19991109/src/makefile.u.tim	Wed Feb 25 08:18:04 1998
++++ f2c-19991109/src/makefile.u	Wed Jul 28 12:27:07 1999
+@@ -1,8 +1,8 @@
+ #	Makefile for f2c, a Fortran 77 to C converter
+ 
+ .SUFFIXES: .c .o
+-CC = cc
+-CFLAGS = -O
++CC = gcc
++CFLAGS = $(RPM_OPT_FLAGS)
+ SHELL = /bin/sh
+ YACC = yacc
+ YFLAGS =
+--- f2c-19991109/f2c.h.tim	Wed Jul 28 11:01:39 1999
++++ f2c-19991109/f2c.h	Wed Jul 28 12:27:07 1999
+@@ -7,6 +7,25 @@
+ #ifndef F2C_INCLUDE
+ #define F2C_INCLUDE
+ 
++#ifdef __alpha__
++
++typedef int integer;
++typedef unsigned int uinteger;
++typedef char *address;
++typedef short int shortint;
++typedef float real;
++typedef double doublereal;
++typedef struct { real r, i; } complex;
++typedef struct { doublereal r, i; } doublecomplex;
++typedef int logical;
++typedef short int shortlogical;
++typedef char logical1;
++typedef char integer1;
++
++
++
++#else
++
+ typedef long int integer;
+ typedef unsigned long int uinteger;
+ typedef char *address;
+@@ -26,6 +45,8 @@
+ #define qbit_set(a,b)	((a) |  ((ulongint)1 << (b)))
+ #endif
+ 
++#endif /* __alpha__ */
++
+ #define TRUE_ (1)
+ #define FALSE_ (0)
+ 
+@@ -42,9 +63,21 @@
+ typedef short ftnlen;
+ typedef short ftnint;
+ #else
++
++#ifdef __alpha__
++
++typedef int flag;
++typedef int ftnlen;
++typedef int ftnint;
++
++#else
++
+ typedef long int flag;
+ typedef long int ftnlen;
+ typedef long int ftnint;
++
++#endif /* __alpha__ */
++
+ #endif
+ 
+ /*external read, write*/

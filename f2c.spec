@@ -43,9 +43,11 @@ mkdir -p libf2c/PIC
 cp -f libf2c/makefile.u libf2c/Makefile
 cp -f src/makefile.u src/Makefile
 make -C src f2c \
+	CC="%{__cc}" \
 	RPM_OPT_FLAGS="%{rpmcflags}" \
 	MFLAG="$MFLAG"
 make -C libf2c \
+	CC="%{__cc}" \
 	RPM_OPT_FLAGS="%{rpmcflags}" \
 	MFLAG="$MFLAG" 
 

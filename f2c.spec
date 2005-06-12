@@ -48,7 +48,7 @@ make -C src f2c \
 	MFLAG="$MFLAG"
 make -C libf2c \
 	CC="%{__cc}" \
-	RPM_OPT_FLAGS="%{rpmcflags}" \
+	RPM_OPT_FLAGS="%{rpmcflags} -fPIC" \
 	MFLAG="$MFLAG" 
 
 %install

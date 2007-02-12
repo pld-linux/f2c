@@ -1,5 +1,5 @@
 Summary:	The f2c Fortran to C/C++ conversion program and libraries
-Summary(pl.UTF-8):   Program f2c do tłumaczenia z Fortranu na C/C++ i biblioteki
+Summary(pl.UTF-8):	Program f2c do tłumaczenia z Fortranu na C/C++ i biblioteki
 Name:		f2c
 Version:	20031027
 Release:	1

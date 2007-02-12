@@ -1,5 +1,5 @@
 Summary:	The f2c Fortran to C/C++ conversion program and libraries
-Summary(pl):	Program f2c do t≥umaczenia z Fortranu na C/C++ i biblioteki
+Summary(pl.UTF-8):   Program f2c do t≈Çumaczenia z Fortranu na C/C++ i biblioteki
 Name:		f2c
 Version:	20031027
 Release:	1
@@ -19,15 +19,15 @@ standard input and write C to standard output.
 f2c can also be used (with the -P option) to generate ANSI C header
 files for calling Fortran routines from C.
 
-%description -l pl
-f2c s≥uøy do t≥umaczenia kodu ºrÛd≥owego w Fortranie 77 na kod
-daj±c w wyniku pliki z kodem ºrÛd≥owym w C lub C++. Je∂li w wierszu
-polecenia nie zostan± podane øadne pliki, f2c bÍdzie oczekiwa≥ kodu w
-Fortranie na standardowym wej∂ciu i pisa≥ kod w C na standardowe
-wyj∂cie.
+%description -l pl.UTF-8
+f2c s≈Çu≈ºy do t≈Çumaczenia kodu ≈∫r√≥d≈Çowego w Fortranie 77 na kod
+dajƒÖc w wyniku pliki z kodem ≈∫r√≥d≈Çowym w C lub C++. Je≈õli w wierszu
+polecenia nie zostanƒÖ podane ≈ºadne pliki, f2c bƒôdzie oczekiwa≈Ç kodu w
+Fortranie na standardowym wej≈õciu i pisa≈Ç kod w C na standardowe
+wyj≈õcie.
 
-f2c moøe rÛwnieø s≥uøyÊ (z opcj± -P) do generowania plikÛw
-nag≥Ûwkowych ANSI C w celu wywo≥ywania procedur fortranowskich z C.
+f2c mo≈ºe r√≥wnie≈º s≈Çu≈ºyƒá (z opcjƒÖ -P) do generowania plik√≥w
+nag≈Ç√≥wkowych ANSI C w celu wywo≈Çywania procedur fortranowskich z C.
 
 %prep
 %setup -q

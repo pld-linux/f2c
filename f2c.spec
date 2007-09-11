@@ -42,14 +42,14 @@ mkdir -p libf2c/PIC
 
 cp -f libf2c/makefile.u libf2c/Makefile
 cp -f src/makefile.u src/Makefile
-make -C src f2c \
+%{__make} -C src f2c \
 	CC="%{__cc}" \
 	RPM_OPT_FLAGS="%{rpmcflags}" \
 	MFLAG="$MFLAG"
-make -C libf2c \
+%{__make} -C libf2c \
 	CC="%{__cc}" \
 	RPM_OPT_FLAGS="%{rpmcflags} -fPIC" \
-	MFLAG="$MFLAG" 
+	MFLAG="$MFLAG"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -64,7 +64,7 @@ install libf2c/libf2c.so.0.22 $RPM_BUILD_ROOT%{_libdir}
 ln -sf libf2c.so.0.22 $RPM_BUILD_ROOT%{_libdir}/libf2c.so
 
 rm -rf $RPM_BUILD_ROOT%{_prefix}/liblibf2c.so
- 
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 

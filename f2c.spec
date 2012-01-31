@@ -9,7 +9,10 @@ Source0:	%{name}-%{version}.tar.bz2
 # Source0-md5:	bcd2c9ba1307c9fc9f73027c3c4e3d4c
 Patch0:		%{name}-20031027.patch
 URL:		ftp://ftp.netlib.org/f2c/
+BuildRequires:	rpmbuild(macros) >= 1.583
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define         skip_post_check_so      libf2c.so.*
 
 %description
 f2c converts Fortran 77 source code to C or C++ source files. If no

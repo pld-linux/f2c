@@ -32,7 +32,7 @@ nagłówkowych ANSI C w celu wywoływania procedur fortranowskich z C.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 %ifarch alpha
